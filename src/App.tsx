@@ -1,5 +1,12 @@
+import MainLayout from "./layouts/MainLayout";
+import ProtectedRoute from "./layouts/ProtectedRoute";
+
 function App() {
-  return <div>Computer Garage App</div>;
+  return (
+    <ProtectedRoute>
+      <MainLayout />
+    </ProtectedRoute>
+  );
 }
 
 export default App;
