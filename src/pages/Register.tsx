@@ -10,6 +10,10 @@ const Register = () => {
     password: "",
   });
 
+  const handleSubmitRegistration = () => {
+    console.log(registrationData, "registraiton data");
+  };
+
   return (
     <div
       style={{
@@ -34,25 +38,58 @@ const Register = () => {
           name="name"
           rules={[{ required: true, message: "Please input your Name!" }]}
         >
-          <Input type="text" placeholder="Name" />
+          <Input
+            type="text"
+            placeholder="Name"
+            onBlur={(e) =>
+              setRegistrationData({ ...registrationData, name: e.target.value })
+            }
+          />
         </Form.Item>
 
         <Form.Item
           name="email"
           rules={[{ required: true, message: "Please input your Email!" }]}
         >
-          <Input type="email" placeholder="Email" />
+          <Input
+            type="email"
+            placeholder="Email"
+            onBlur={(e) =>
+              setRegistrationData({
+                ...registrationData,
+                email: e.target.value,
+              })
+            }
+          />
         </Form.Item>
 
         <Form.Item name="photoUrl">
-          <Input type="text" placeholder="Photo URL" />
+          <Input
+            type="text"
+            placeholder="Photo URL"
+            onBlur={(e) =>
+              setRegistrationData({
+                ...registrationData,
+                photoUrl: e.target.value,
+              })
+            }
+          />
         </Form.Item>
 
         <Form.Item
           name="password"
           rules={[{ required: true, message: "Please input your Password!" }]}
         >
-          <Input type="password" placeholder="Password" />
+          <Input
+            type="password"
+            placeholder="Password"
+            onBlur={(e) =>
+              setRegistrationData({
+                ...registrationData,
+                password: e.target.value,
+              })
+            }
+          />
         </Form.Item>
 
         <Form.Item
@@ -67,6 +104,7 @@ const Register = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
+            onClick={handleSubmitRegistration}
           >
             Register
           </Button>
