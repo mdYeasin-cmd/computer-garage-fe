@@ -1,9 +1,14 @@
 import { Button, Form, Typography } from "antd";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import BaseForm from "../components/form/BaseForm";
 import BaseInput from "../components/form/BaseInput";
 import { z } from "zod";
 import { FieldValues } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLoginMutation } from "../redux/features/auth/authApi";
+import { toast } from "sonner";
+import { useAppDispatch } from "../redux/hooks";
+import { setUser } from "../redux/features/auth/authSlice";
 
 const { Title } = Typography;
 
@@ -18,8 +23,31 @@ const loginSchema = z.object({
 });
 
 const Login = () => {
-  const onSubmit = (data: FieldValues) => {
-    console.log(data, "login form data");
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [login] = useLoginMutation();
+
+  const onSubmit = async (data: FieldValues) => {
+    const toastId = toast.loading("Please wait...");
+    try {
+      const res = await login(data).unwrap();
+
+      console.log(res);
+
+      if (res.success) {
+        toast.success("Successfully logged in", { id: toastId });
+        navigate("/");
+
+        dispatch(
+          setUser({
+            user: res.data.user,
+            token: res.data.token,
+          })
+        );
+      }
+    } catch (error) {
+      toast.error("Your email or password is wrong", { id: toastId });
+    }
   };
 
   return (
@@ -39,7 +67,7 @@ const Login = () => {
           borderRadius: "5px",
         }}
       >
-        <BaseForm validationSchema={loginSchema} onSubmit={onSubmit}>
+        <BaseForm resolver={zodResolver(loginSchema)} onSubmit={onSubmit}>
           <Title level={2} style={{ textAlign: "center" }}>
             Login
           </Title>

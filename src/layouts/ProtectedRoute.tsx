@@ -1,8 +1,13 @@
 import { ReactNode } from "react";
+import { selectToken } from "../redux/features/auth/authSlice";
+import { useAppSelector } from "../redux/hooks";
+import { Navigate } from "react-router-dom";
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  //   if (!token) {
-  //     return <Navigate to="/login" replace={true}></Navigate>;
-  //   }
+  const token = useAppSelector(selectToken);
+
+  if (!token) {
+    return <Navigate to="/login" replace={true}></Navigate>;
+  }
 
   return children;
 };
