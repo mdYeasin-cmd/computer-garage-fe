@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode } from "react";
 import {
   FieldValues,
@@ -6,22 +5,46 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { ZodType } from "zod";
 
-type TBaseForm = {
-  children: ReactNode;
-  onSubmit: SubmitHandler<FieldValues>;
-  validationSchema: ZodType;
+type TFormConfig = {
+  defaultValues?: Record<string, any>;
+  resolver?: any;
 };
 
-const BaseForm = ({ children, onSubmit, validationSchema }: TBaseForm) => {
-  const methods = useForm({
-    resolver: zodResolver(validationSchema),
-  });
+type TBaseForm = {
+  onSubmit: any;
+  children: ReactNode;
+} & TFormConfig;
+
+const BaseForm = ({
+  children,
+  onSubmit,
+  defaultValues,
+  resolver,
+}: TBaseForm) => {
+  const formConfig: TFormConfig = {};
+
+  if (defaultValues) {
+    formConfig["defaultValues"] = defaultValues;
+  }
+
+  if (resolver) {
+    formConfig["resolver"] = resolver;
+  }
+
+  const methods = useForm(formConfig);
+
+  const submitHandler: SubmitHandler<FieldValues> = (data) => {
+    onSubmit(data);
+    // methods.reset();
+  };
 
   return (
     <FormProvider {...methods}>
-      <form style={{ width: "100%" }} onSubmit={methods.handleSubmit(onSubmit)}>
+      <form
+        style={{ width: "100%" }}
+        onSubmit={methods.handleSubmit(submitHandler)}
+      >
         {children}
       </form>
     </FormProvider>

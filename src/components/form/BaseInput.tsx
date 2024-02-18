@@ -12,6 +12,8 @@ const BaseInput = ({ type, name, label }: TBaseInput) => {
     formState: { errors },
   } = useFormContext();
 
+  // console.log(errors, "zod error");
+
   const showErrorMessage = () => {
     for (const error in errors) {
       if (error === name) {

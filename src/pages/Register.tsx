@@ -1,9 +1,12 @@
 import { Button, Form, Typography } from "antd";
 import { FieldValues } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import BaseForm from "../components/form/BaseForm";
 import BaseInput from "../components/form/BaseInput";
+import { useRegisterMutation } from "../redux/features/auth/authApi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 const { Title } = Typography;
 
@@ -12,10 +15,6 @@ const registerSchema = z.object({
   email: z
     .string({ required_error: "Email is required" })
     .email("Invalid email address"),
-  photoUrl: z
-    .string()
-    .url({ message: "Please provide a valid photo url" })
-    .optional(),
   password: z
     .string({ required_error: "Password is required" })
     .min(6, { message: "Password must be at least 6 characters" })
@@ -23,8 +22,21 @@ const registerSchema = z.object({
 });
 
 const Register = () => {
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
+  const navigate = useNavigate();
+  const [register] = useRegisterMutation();
+
+  const onSubmit = async (data: FieldValues) => {
+    const toastId = toast.loading("Please wait...");
+    try {
+      const res = await register(data).unwrap();
+
+      if (res.success) {
+        toast.success("Registration successfull", { id: toastId });
+        navigate("/login");
+      }
+    } catch (error: any) {
+      toast.error(error.data.errorSources[0].message, { id: toastId });
+    }
   };
 
   return (
@@ -44,13 +56,12 @@ const Register = () => {
           borderRadius: "5px",
         }}
       >
-        <BaseForm validationSchema={registerSchema} onSubmit={onSubmit}>
+        <BaseForm resolver={zodResolver(registerSchema)} onSubmit={onSubmit}>
           <Title style={{ textAlign: "center" }} level={2}>
             Register Account
           </Title>
           <BaseInput label="Name" type="text" name="name" />
           <BaseInput label="Email" type="text" name="email" />
-          <BaseInput label="Photo URL (Optional)" type="text" name="photoUrl" />
           <BaseInput label="Password" type="text" name="password" />
           <Form.Item
             style={{
