@@ -1,17 +1,14 @@
-import { Button, Form, Input } from "antd";
-import { useState } from "react";
+import { Button, Form, Input, Typography } from "antd";
+import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
 
-const Register = () => {
-  const [registrationData, setRegistrationData] = useState({
-    name: "",
-    email: "",
-    photoUrl: "",
-    password: "",
-  });
+const { Title } = Typography;
 
-  const handleSubmitRegistration = () => {
-    console.log(registrationData, "registraiton data");
+const Register = () => {
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
   return (
@@ -33,18 +30,16 @@ const Register = () => {
         name="login"
         className="login-form"
         initialValues={{ remember: true }}
+        onSubmitCapture={handleSubmit(onSubmit)}
       >
+        <Title>h1. Ant Design</Title>
         <Form.Item
-          name="name"
+          // name="name"
           rules={[{ required: true, message: "Please input your Name!" }]}
+          id="name"
+          {...register("name")}
         >
-          <Input
-            type="text"
-            placeholder="Name"
-            onBlur={(e) =>
-              setRegistrationData({ ...registrationData, name: e.target.value })
-            }
-          />
+          <Input type="text" placeholder="Name" />
         </Form.Item>
 
         <Form.Item
@@ -54,12 +49,8 @@ const Register = () => {
           <Input
             type="email"
             placeholder="Email"
-            onBlur={(e) =>
-              setRegistrationData({
-                ...registrationData,
-                email: e.target.value,
-              })
-            }
+            id="email"
+            {...register("email")}
           />
         </Form.Item>
 
@@ -67,12 +58,8 @@ const Register = () => {
           <Input
             type="text"
             placeholder="Photo URL"
-            onBlur={(e) =>
-              setRegistrationData({
-                ...registrationData,
-                photoUrl: e.target.value,
-              })
-            }
+            id="photoUrl"
+            {...register("photoUrl")}
           />
         </Form.Item>
 
@@ -83,12 +70,8 @@ const Register = () => {
           <Input
             type="password"
             placeholder="Password"
-            onBlur={(e) =>
-              setRegistrationData({
-                ...registrationData,
-                password: e.target.value,
-              })
-            }
+            id="password"
+            {...register("password")}
           />
         </Form.Item>
 
@@ -104,7 +87,6 @@ const Register = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
-            onClick={handleSubmitRegistration}
           >
             Register
           </Button>
