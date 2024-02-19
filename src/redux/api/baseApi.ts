@@ -7,6 +7,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
+import { logout } from "../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:5000/api/v1",
@@ -28,7 +29,9 @@ const baseQueryWithAuthCheck: BaseQueryFn<
 > = async (args, api, extraOptions): Promise<any> => {
   const result = await baseQuery(args, api, extraOptions);
 
-  console.log(result, "base query with auth check");
+  if (result?.error?.status === 401) {
+    api.dispatch(logout());
+  }
 
   return result;
 };
