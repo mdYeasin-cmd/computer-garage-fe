@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  openModal: false,
   products: [],
 };
 
@@ -11,9 +12,13 @@ const productSlice = createSlice({
     getAllProducts: (state, action) => {
       state.products = action.payload;
     },
+    openModal: (state, action) => {
+      console.log(action.payload, "payload");
+      state.openModal = action.payload;
+    },
   },
 });
 
-export const { getAllProducts } = productSlice.actions;
+export const { getAllProducts, openModal } = productSlice.actions;
 
 export default productSlice.reducer;

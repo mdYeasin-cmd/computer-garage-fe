@@ -19,6 +19,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </PersistGate>
     </Provider>
-    <Toaster toastOptions={toastConfig} />
+    <Toaster
+      richColors
+      position="top-center"
+      closeButton
+      toastOptions={toastConfig}
+    />
   </React.StrictMode>
 );

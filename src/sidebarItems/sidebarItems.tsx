@@ -3,11 +3,11 @@ import { NavLink } from "react-router-dom";
 
 const sidebarItems: MenuProps["items"] = [
   {
-    key: "Products",
+    key: "/",
     label: <NavLink to="/">Products</NavLink>,
   },
   {
-    key: "Sales",
+    key: "/sales",
     label: <NavLink to="/sales">Sales</NavLink>,
   },
 ];
