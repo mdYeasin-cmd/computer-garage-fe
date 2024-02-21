@@ -24,6 +24,14 @@ const productApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["products"],
     }),
+    bulkProductDelete: builder.mutation({
+      query: (productIds) => ({
+        url: `/products/bulk-product-delete`,
+        method: "PUT",
+        body: productIds,
+      }),
+      invalidatesTags: ["products"],
+    }),
   }),
 });
 
@@ -31,4 +39,5 @@ export const {
   useGetAllProductsQuery,
   useAddProductMutation,
   useDeleteAProductMutation,
+  useBulkProductDeleteMutation,
 } = productApi;
