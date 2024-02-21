@@ -5,6 +5,7 @@ type TBaseInput = {
   type: string;
   name: string;
   label: string;
+  props?: object[];
 };
 
 const BaseInput = ({ type, name, label }: TBaseInput) => {

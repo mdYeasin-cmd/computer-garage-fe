@@ -13,7 +13,6 @@ const productSlice = createSlice({
       state.products = action.payload;
     },
     openModal: (state, action) => {
-      console.log(action.payload, "payload");
       state.openModal = action.payload;
     },
   },
