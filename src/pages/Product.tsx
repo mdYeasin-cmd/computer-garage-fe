@@ -1,8 +1,14 @@
 import { Button, Table, TableColumnsType } from "antd";
 import { useGetAllProductsQuery } from "../redux/features/product/productApi";
 import { useAppDispatch } from "../redux/hooks";
-import { openModal } from "../redux/features/product/productSlice";
+import {
+  openDeleteConfirmationModal,
+  openModal,
+  selectedProduct,
+} from "../redux/features/product/productSlice";
 import AddProductModal from "../components/product/AddProductModal";
+import DeleteIcon from "../assets/icons/DeleteIcon";
+import DeleteProductConfirmationModal from "../components/product/DeleteProductConfirmationModal";
 
 type TProduct = {
   _id: string;
@@ -56,6 +62,22 @@ const Product = () => {
       dataIndex: "quantity",
       responsive: ["md"],
     },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (_: any, record: any) => {
+        return (
+          <div
+            onClick={() => {
+              dispatch(openDeleteConfirmationModal(true));
+              dispatch(selectedProduct(record));
+            }}
+          >
+            <DeleteIcon />
+          </div>
+        );
+      },
+    },
   ];
 
   const rows: TProduct[] = data?.data?.map((item: TProduct) => {
@@ -73,6 +95,7 @@ const Product = () => {
       </div>
 
       <AddProductModal />
+      <DeleteProductConfirmationModal />
     </>
   );
 };

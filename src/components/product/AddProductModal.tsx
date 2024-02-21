@@ -9,15 +9,8 @@ import BaseTextArea from "../form/BaseTextArea";
 import { RootState } from "../../redux/store";
 import { useAddProductMutation } from "../../redux/features/product/productApi";
 import { toast } from "sonner";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const { Title } = Typography;
-
-const addProductSchema = z.object({
-  name: z.string({ required_error: "Name is required" }),
-  price: z.number({ required_error: "Price is required" }),
-});
 
 const AddProductModal = () => {
   const { openModal: open } = useAppSelector(
@@ -27,8 +20,6 @@ const AddProductModal = () => {
   const [addProduct] = useAddProductMutation();
 
   const handleProductSubmit = async (data: FieldValues) => {
-    console.log(data, "product data");
-
     try {
       const res = await addProduct(data);
 
@@ -56,10 +47,7 @@ const AddProductModal = () => {
         * All fields are mandatory.
       </span>
 
-      <BaseForm
-        onSubmit={handleProductSubmit}
-        resolver={zodResolver(addProductSchema)}
-      >
+      <BaseForm onSubmit={handleProductSubmit}>
         <div>
           <label style={{ display: "inline-block", marginLeft: "10px" }}>
             Name <span style={{ color: "red" }}>*</span>
@@ -109,7 +97,7 @@ const AddProductModal = () => {
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Quantity <span style={{ color: "red" }}>*</span>
             </label>
-            <BaseInput label="Quantity" type="text" name="quantity" />
+            <BaseInput label="Quantity" type="number" name="quantity" />
           </div>
         </div>
 
@@ -133,7 +121,7 @@ const AddProductModal = () => {
             </label>
             <BaseInput
               label="Warranty Period"
-              type="text"
+              type="number"
               name="warrantyPeriod"
             />
           </div>
@@ -217,6 +205,7 @@ const AddProductModal = () => {
             style={{ margin: "10px" }}
             type="primary"
             htmlType="submit"
+            onClick={() => dispatch(openModal(false))}
           >
             Submit
           </Button>
