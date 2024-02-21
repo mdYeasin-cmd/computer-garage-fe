@@ -14,6 +14,8 @@ import DeleteIcon from "../assets/icons/DeleteIcon";
 import DeleteProductConfirmationModal from "../components/product/DeleteProductConfirmationModal";
 import { useState } from "react";
 import { toast } from "sonner";
+import CreateSaleModal from "../components/sale/CreateSaleModal";
+import { openCreateSaleModal } from "../redux/features/sale/saleSlice";
 
 const { Search } = Input;
 
@@ -82,7 +84,15 @@ const Product = () => {
             }}
             style={{ display: "flex", alignItems: "center", gap: 10 }}
           >
-            <Button>Sell</Button>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(selectedProduct(record));
+                dispatch(openCreateSaleModal(true));
+              }}
+            >
+              Sell
+            </Button>
             <DeleteIcon />
           </div>
         );
@@ -179,6 +189,7 @@ const Product = () => {
 
       <AddProductModal />
       <DeleteProductConfirmationModal />
+      <CreateSaleModal />
     </>
   );
 };
