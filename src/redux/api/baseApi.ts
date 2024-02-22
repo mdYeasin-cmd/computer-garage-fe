@@ -10,7 +10,7 @@ import { RootState } from "../store";
 import { logout } from "../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api/v1",
+  baseUrl: "https://computer-garage-be.vercel.app/api/v1",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
 
@@ -39,6 +39,6 @@ const baseQueryWithAuthCheck: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithAuthCheck,
-  tagTypes: ["products"],
+  tagTypes: ["products", "sales"],
   endpoints: () => ({}),
 });
