@@ -63,6 +63,12 @@ const CreateSaleModal = () => {
     >
       <Title level={4}>Add Sell Information</Title>
 
+      <span
+        style={{ display: "inline-block", marginBottom: "10px", color: "red" }}
+      >
+        * All fields are mandatory.
+      </span>
+
       <div>
         <label
           style={{
@@ -70,7 +76,7 @@ const CreateSaleModal = () => {
             marginLeft: "10px",
           }}
         >
-          Quantity
+          Quantity <span style={{ color: "red" }}>*</span>
         </label>
         <Form.Item>
           <Input
@@ -90,7 +96,7 @@ const CreateSaleModal = () => {
             marginLeft: "10px",
           }}
         >
-          Buyer Name
+          Buyer Name <span style={{ color: "red" }}>*</span>
         </label>
         <Form.Item>
           <Input
@@ -110,7 +116,7 @@ const CreateSaleModal = () => {
             marginLeft: "10px",
           }}
         >
-          Date
+          Date <span style={{ color: "red" }}>*</span>
         </label>
         <Form.Item>
           <Input

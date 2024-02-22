@@ -72,7 +72,7 @@ const Login = () => {
             Login
           </Title>
           <BaseInput label="Email" type="text" name="email" />
-          <BaseInput label="Password" type="text" name="password" />
+          <BaseInput label="Password" type="password" name="password" />
           <Form.Item
             style={{
               display: "flex",

@@ -64,7 +64,7 @@ const AddProductModal = () => {
                 marginLeft: "10px",
               }}
             >
-              Category
+              Category <span style={{ color: "red" }}>*</span>
             </label>
             <BaseSelect
               name="category"
@@ -79,7 +79,7 @@ const AddProductModal = () => {
 
           <div style={{ width: "49%" }}>
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
-              Brand
+              Brand <span style={{ color: "red" }}>*</span>
             </label>
             <BaseInput label="Brand" type="text" name="brand" />
           </div>
@@ -105,7 +105,7 @@ const AddProductModal = () => {
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ width: "49%" }}>
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
-              Availability
+              Availability <span style={{ color: "red" }}>*</span>
             </label>
             <BaseSelect
               name="availability"

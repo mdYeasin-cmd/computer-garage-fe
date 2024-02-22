@@ -56,21 +56,17 @@ const Product = () => {
       responsive: ["md"],
     },
     {
-      title: "Compatibility",
-      dataIndex: "compatibility",
-    },
-    {
-      title: "Interface",
-      dataIndex: "interface",
-    },
-    {
-      title: "Condition",
-      dataIndex: "condition",
+      title: "Price",
+      dataIndex: "price",
     },
     {
       title: "Quantity",
       dataIndex: "quantity",
       responsive: ["md"],
+    },
+    {
+      title: "Availability",
+      dataIndex: "availability",
     },
     {
       title: "Action",
