@@ -17,7 +17,7 @@ const CreateSaleModal = () => {
     (state: RootState) => state.product
   );
 
-  const { _id } = selectedProduct;
+  const { _id, name } = selectedProduct;
 
   const dispatch = useAppDispatch();
   const [addASaleInfo] = useAddASaleInfoMutation();
@@ -38,6 +38,7 @@ const CreateSaleModal = () => {
 
           await addASaleInfo({
             productId: _id,
+            productName: name,
             ...saleState,
           });
 

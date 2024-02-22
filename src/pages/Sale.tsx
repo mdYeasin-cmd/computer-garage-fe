@@ -11,7 +11,7 @@ const Sale = () => {
   const columns = [
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: "productName",
     },
     {
       title: "Quantity",
@@ -29,9 +29,8 @@ const Sale = () => {
 
   const rows = data?.data?.map((item: any) => {
     return {
-      key: item._id,
+      key: item?._id,
       ...item,
-      name: item.productId.name,
     };
   });
 
