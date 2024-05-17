@@ -1,5 +1,5 @@
-import { Button, Form, Typography } from "antd";
-import { FieldValues } from "react-hook-form";
+import { Button, Form, Typography, Radio } from "antd";
+import { Controller, FieldValues } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import BaseForm from "../components/form/BaseForm";
@@ -19,6 +19,7 @@ const registerSchema = z.object({
     .string({ required_error: "Password is required" })
     .min(6, { message: "Password must be at least 6 characters" })
     .max(32, { message: "Password can't be more than 32 characters" }),
+  role: z.string({ required_error: "Role is required" }),
 });
 
 const Register = () => {
@@ -26,6 +27,7 @@ const Register = () => {
   const [register] = useRegisterMutation();
 
   const onSubmit = async (data: FieldValues) => {
+    console.log(data, "form data");
     const toastId = toast.loading("Please wait...");
     try {
       const res = await register(data).unwrap();
@@ -56,10 +58,31 @@ const Register = () => {
           borderRadius: "5px",
         }}
       >
-        <BaseForm resolver={zodResolver(registerSchema)} onSubmit={onSubmit}>
+        <BaseForm
+          resolver={zodResolver(registerSchema)}
+          onSubmit={onSubmit}
+          defaultValues={{
+            role: "buyer",
+          }}
+        >
           <Title style={{ textAlign: "center" }} level={2}>
             Register Account
           </Title>
+          <Controller
+            name="role"
+            render={({ field: { onChange, value } }) => {
+              return (
+                <Form.Item
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Radio.Group onChange={onChange} value={value}>
+                    <Radio.Button value="buyer">Buyer</Radio.Button>
+                    <Radio.Button value="seller">Seller</Radio.Button>
+                  </Radio.Group>
+                </Form.Item>
+              );
+            }}
+          />
           <BaseInput label="Name" type="text" name="name" />
           <BaseInput label="Email" type="text" name="email" />
           <BaseInput label="Password" type="password" name="password" />

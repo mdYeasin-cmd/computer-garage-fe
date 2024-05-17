@@ -8,9 +8,10 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { logout } from "../features/auth/authSlice";
+import { BACKEND_API_URL } from "../../constants";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://computer-garage-be.vercel.app/api/v1",
+  baseUrl: BACKEND_API_URL,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
 
@@ -29,9 +30,9 @@ const baseQueryWithAuthCheck: BaseQueryFn<
 > = async (args, api, extraOptions): Promise<any> => {
   const result = await baseQuery(args, api, extraOptions);
 
-  if (result?.error?.status === 401) {
-    api.dispatch(logout());
-  }
+  // if (result?.error?.status === 401) {
+  //   api.dispatch(logout());
+  // }
 
   return result;
 };

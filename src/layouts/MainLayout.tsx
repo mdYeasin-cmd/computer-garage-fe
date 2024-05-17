@@ -30,7 +30,14 @@ const MainLayout = () => {
             style={{ color: "white", marginRight: "40px", marginBottom: 0 }}
             level={3}
           >
-            {user?.name}
+            {user?.name}{" "}
+            <small
+              style={{
+                fontWeight: 300,
+                fontSize: "14px",
+                textTransform: "capitalize",
+              }}
+            >{`(${user?.role})`}</small>
           </Title>
           <Button onClick={handleLogout}>Logout</Button>
         </Header>

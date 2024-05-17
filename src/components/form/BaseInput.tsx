@@ -39,7 +39,13 @@ const BaseInput = ({ type, name, label }: TBaseInput) => {
       name={name}
       render={({ field }) => (
         <Form.Item>
-          <Input {...field} type={type} placeholder={label} id={name} />
+          <Input
+            {...field}
+            type={type}
+            placeholder={label}
+            id={name}
+            size="large"
+          />
           {showErrorMessage()}
         </Form.Item>
       )}
