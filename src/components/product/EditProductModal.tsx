@@ -54,7 +54,7 @@ const EditProductModal = ({ product }: TEditProductModalProps) => {
       width={1000}
       footer={null}
     >
-      <Title level={3}>Add a Product</Title>
+      <Title level={3}>Editing {productFormData?.name} information</Title>
 
       <span
         style={{ display: "inline-block", marginBottom: "10px", color: "red" }}
