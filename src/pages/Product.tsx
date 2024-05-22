@@ -3,7 +3,7 @@ import {
   useBulkProductDeleteMutation,
   useGetAllProductsQuery,
 } from "../redux/features/product/productApi";
-import { useAppDispatch } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
   openDeleteConfirmationModal,
   openEditModal,
@@ -19,6 +19,8 @@ import CreateSaleModal from "../components/sale/CreateSaleModal";
 import { openCreateSaleModal } from "../redux/features/sale/saleSlice";
 import EditIcon from "../assets/icons/EditIcon";
 import { TProduct } from "../types";
+import EditProductModal from "../components/product/EditProductModal";
+import { RootState } from "../redux/store";
 
 const { Search } = Input;
 
@@ -48,6 +50,10 @@ const Product = () => {
   const { data, isLoading: isProductsFetching } =
     useGetAllProductsQuery(undefined);
   const [bulkProductDelete] = useBulkProductDeleteMutation();
+  const [editProduct, setEditProduct] = useState<Partial<TProduct>>({});
+  const { openModal: open, openEditModal: editOpen } = useAppSelector(
+    (state: RootState) => state.product
+  );
 
   // console.log(editProduct, "edited product");
 
@@ -98,8 +104,7 @@ const Product = () => {
             <span
               onClick={(e) => {
                 e.stopPropagation();
-                // console.log("edit button clicked");
-                // console.log(record, "selected record");
+                setEditProduct(record);
                 dispatch(openEditModal(true));
               }}
             >
@@ -211,15 +216,8 @@ const Product = () => {
         />
       </div>
 
-      {/* {productId && (
-        <ProductModal
-          title={"Edit a Product"}
-          productId={productId}
-          // product={editProduct}
-          // productState={setEditProduct}
-        />
-      )} */}
-      <AddProductModal />
+      {open && <AddProductModal />}
+      {editOpen && <EditProductModal product={editProduct} />}
       <DeleteProductConfirmationModal />
       <CreateSaleModal />
     </>

@@ -1,8 +1,8 @@
 import { Button, Form, Modal, Typography, Input, Select } from "antd";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { openModal } from "../../redux/features/product/productSlice";
+import { openEditModal } from "../../redux/features/product/productSlice";
 import { RootState } from "../../redux/store";
-import { useAddProductMutation } from "../../redux/features/product/productApi";
+import { useEditAProductMutation } from "../../redux/features/product/productApi";
 import { toast } from "sonner";
 import { TProduct } from "../../types";
 import { useState } from "react";
@@ -10,25 +10,33 @@ import { useState } from "react";
 const { Title } = Typography;
 const { TextArea } = Input;
 
-const AddProductModal = () => {
-  const { openModal: open } = useAppSelector(
+type TEditProductModalProps = {
+  product: Partial<TProduct>;
+};
+
+const EditProductModal = ({ product }: TEditProductModalProps) => {
+  const { openEditModal: open } = useAppSelector(
     (state: RootState) => state.product
   );
   const dispatch = useAppDispatch();
-  const [addProduct] = useAddProductMutation();
-  const [productFormData, setProductFormData] = useState<Partial<TProduct>>({});
+  // const [addProduct] = useAddProductMutation();
+  const [editProduct] = useEditAProductMutation();
+  const [productFormData, setProductFormData] =
+    useState<Partial<TProduct>>(product);
   const [form] = Form.useForm();
 
+  console.log(productFormData, "product edit from state");
+
   const handleProductSubmit = async () => {
-    dispatch(openModal(false));
+    dispatch(openEditModal(false));
+
     form.resetFields();
 
     try {
-      const res = await addProduct(productFormData);
+      const res = await editProduct(productFormData);
 
       if (res) {
-        toast.success("Product added successfully");
-        setProductFormData({});
+        toast.success("Product updated successfully");
       }
     } catch (error) {
       console.log(error);
@@ -40,8 +48,7 @@ const AddProductModal = () => {
       centered
       open={open}
       onCancel={() => {
-        dispatch(openModal(false));
-        setProductFormData({});
+        dispatch(openEditModal(false));
         form.resetFields();
       }}
       width={1000}
@@ -64,6 +71,7 @@ const AddProductModal = () => {
           <Form.Item name="name">
             <Input
               type="text"
+              defaultValue={productFormData?.name}
               onChange={(e) => {
                 setProductFormData({
                   ...productFormData,
@@ -90,6 +98,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="category">
               <Select
+                defaultValue={productFormData?.category}
                 style={{ width: "100%" }}
                 onChange={(value) => {
                   setProductFormData({
@@ -114,6 +123,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="brand">
               <Input
+                defaultValue={productFormData?.brand}
                 type="text"
                 onChange={(e) => {
                   setProductFormData({
@@ -137,6 +147,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="price">
               <Input
+                defaultValue={productFormData?.price}
                 type="number"
                 placeholder="Price"
                 id="price"
@@ -157,6 +168,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="quantity">
               <Input
+                defaultValue={productFormData?.quantity}
                 type="number"
                 placeholder="Quantity"
                 id="quantity"
@@ -180,6 +192,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="availability">
               <Select
+                defaultValue={productFormData?.availability}
                 style={{ width: "100%" }}
                 onChange={(value) => {
                   setProductFormData({
@@ -203,6 +216,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="warrantyPeriod">
               <Input
+                defaultValue={productFormData?.warrantyPeriod}
                 type="number"
                 placeholder="Warranty Period"
                 id="warrantyPeriod"
@@ -226,6 +240,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="compatibility">
               <Select
+                defaultValue={productFormData?.compatibility}
                 style={{ width: "100%" }}
                 onChange={(value) => {
                   setProductFormData({
@@ -250,6 +265,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="interface">
               <Input
+                defaultValue={productFormData?.interface}
                 type="text"
                 placeholder="Interface"
                 id="interface"
@@ -273,6 +289,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="color">
               <Input
+                defaultValue={productFormData?.color}
                 type="text"
                 onChange={(e) => {
                   setProductFormData({
@@ -293,6 +310,7 @@ const AddProductModal = () => {
             </label>
             <Form.Item name="capacity">
               <Input
+                defaultValue={productFormData?.capacity}
                 type="text"
                 placeholder="Capacity"
                 id="capacity"
@@ -315,6 +333,7 @@ const AddProductModal = () => {
           </label>
           <Form.Item name="condition">
             <Select
+              defaultValue={productFormData?.condition}
               style={{ width: "100%" }}
               onChange={(value) => {
                 setProductFormData({
@@ -339,6 +358,7 @@ const AddProductModal = () => {
           </label>
           <Form.Item name="description">
             <TextArea
+              defaultValue={productFormData?.description}
               onChange={(e) => {
                 setProductFormData({
                   ...productFormData,
@@ -381,4 +401,4 @@ const AddProductModal = () => {
   );
 };
 
-export default AddProductModal;
+export default EditProductModal;
