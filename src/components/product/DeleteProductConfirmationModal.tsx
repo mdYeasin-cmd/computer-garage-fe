@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { openDeleteConfirmationModal } from "../../redux/features/product/productSlice";
 import { useDeleteAProductMutation } from "../../redux/features/product/productApi";
+import { toast } from "sonner";
 
 const DeleteProductConfirmationModal = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,7 @@ const DeleteProductConfirmationModal = () => {
       onOk={async () => {
         dispatch(openDeleteConfirmationModal(false));
         await deleteAProduct(_id);
+        toast.success("Product is deleted successfully.");
       }}
       onCancel={() => dispatch(openDeleteConfirmationModal(false))}
     >

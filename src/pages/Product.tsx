@@ -6,6 +6,7 @@ import {
 import { useAppDispatch } from "../redux/hooks";
 import {
   openDeleteConfirmationModal,
+  openEditModal,
   openModal,
   selectedProduct,
 } from "../redux/features/product/productSlice";
@@ -16,29 +17,39 @@ import { useState } from "react";
 import { toast } from "sonner";
 import CreateSaleModal from "../components/sale/CreateSaleModal";
 import { openCreateSaleModal } from "../redux/features/sale/saleSlice";
+import EditIcon from "../assets/icons/EditIcon";
+import { TProduct } from "../types";
 
 const { Search } = Input;
 
-type TProduct = {
-  _id: string;
-  name: string;
-  category: string;
-  brand: string;
-  compatibility: string;
-  quantity: number;
-  interface: string;
-  condition: string;
-  capacity: string;
-  price: number;
-  warrantyPeriod: number;
-  color?: string;
-  availability: "in stock" | "out of stock";
-};
+// const defaultProduct: TProduct = {
+//   _id: "",
+//   name: "",
+//   category: "",
+//   brand: "",
+//   compatibility: "",
+//   quantity: 0,
+//   interface: "",
+//   condition: "",
+//   capacity: "",
+//   price: 0,
+//   warrantyPeriod: 0,
+//   color: "",
+//   availability: "Out of stock",
+//   description: "",
+// };
 
 const Product = () => {
+  // local state
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+  // redux state
   const dispatch = useAppDispatch();
-  const { data } = useGetAllProductsQuery(undefined);
+  const { data, isLoading: isProductsFetching } =
+    useGetAllProductsQuery(undefined);
   const [bulkProductDelete] = useBulkProductDeleteMutation();
+
+  // console.log(editProduct, "edited product");
 
   const columns: TableColumnsType<TProduct> = [
     {
@@ -73,23 +84,37 @@ const Product = () => {
       dataIndex: "action",
       render: (_: any, record: any) => {
         return (
-          <div
-            onClick={() => {
-              dispatch(openDeleteConfirmationModal(true));
-              dispatch(selectedProduct(record));
-            }}
-            style={{ display: "flex", alignItems: "center", gap: 10 }}
-          >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Button
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(selectedProduct(record));
                 dispatch(openCreateSaleModal(true));
+                dispatch(selectedProduct(record));
               }}
             >
               Sell
             </Button>
-            <DeleteIcon />
+
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                // console.log("edit button clicked");
+                // console.log(record, "selected record");
+                dispatch(openEditModal(true));
+              }}
+            >
+              <EditIcon />
+            </span>
+
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(openDeleteConfirmationModal(true));
+                dispatch(selectedProduct(record));
+              }}
+            >
+              <DeleteIcon />
+            </span>
           </div>
         );
       },
@@ -102,8 +127,6 @@ const Product = () => {
       ...item,
     };
   });
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -161,7 +184,11 @@ const Product = () => {
               justifyContent: "flex-end",
             }}
           >
-            <Button onClick={() => dispatch(openModal(true))}>
+            <Button
+              onClick={() => {
+                dispatch(openModal(true));
+              }}
+            >
               Add Product
             </Button>
 
@@ -177,12 +204,21 @@ const Product = () => {
           </div>
         </div>
         <Table
+          loading={isProductsFetching}
           columns={columns}
           dataSource={rows}
           rowSelection={rowSelection}
         />
       </div>
 
+      {/* {productId && (
+        <ProductModal
+          title={"Edit a Product"}
+          productId={productId}
+          // product={editProduct}
+          // productState={setEditProduct}
+        />
+      )} */}
       <AddProductModal />
       <DeleteProductConfirmationModal />
       <CreateSaleModal />

@@ -24,6 +24,8 @@ const BaseForm = ({
 }: TBaseForm) => {
   const formConfig: TFormConfig = {};
 
+  // console.log(defaultValues, "base form");
+
   if (defaultValues) {
     formConfig["defaultValues"] = defaultValues;
   }
@@ -31,6 +33,8 @@ const BaseForm = ({
   if (resolver) {
     formConfig["resolver"] = resolver;
   }
+
+  // console.log(formConfig, "form default value");
 
   const methods = useForm(formConfig);
 

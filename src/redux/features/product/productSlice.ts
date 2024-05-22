@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   openModal: false,
+  openEditModal: false,
   openDeleteConfirmationModal: false,
   products: [],
   selectedProduct: {
@@ -20,6 +21,9 @@ const productSlice = createSlice({
     openModal: (state, action) => {
       state.openModal = action.payload;
     },
+    openEditModal: (state, action) => {
+      state.openEditModal = action.payload;
+    },
     openDeleteConfirmationModal: (state, action) => {
       state.openDeleteConfirmationModal = action.payload;
     },
@@ -32,6 +36,7 @@ const productSlice = createSlice({
 export const {
   getAllProducts,
   openModal,
+  openEditModal,
   openDeleteConfirmationModal,
   selectedProduct,
 } = productSlice.actions;

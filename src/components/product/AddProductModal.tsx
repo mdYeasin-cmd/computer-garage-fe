@@ -1,16 +1,14 @@
-import { Button, Form, Modal, Typography } from "antd";
+import { Button, Form, Modal, Typography, Input, Select } from "antd";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { openModal } from "../../redux/features/product/productSlice";
-import BaseForm from "../form/BaseForm";
-import { FieldValues } from "react-hook-form";
-import BaseInput from "../form/BaseInput";
-import BaseSelect from "../form/BaseSelect";
-import BaseTextArea from "../form/BaseTextArea";
 import { RootState } from "../../redux/store";
 import { useAddProductMutation } from "../../redux/features/product/productApi";
 import { toast } from "sonner";
+import { TProduct } from "../../types";
+import { useState } from "react";
 
 const { Title } = Typography;
+const { TextArea } = Input;
 
 const AddProductModal = () => {
   const { openModal: open } = useAppSelector(
@@ -18,10 +16,14 @@ const AddProductModal = () => {
   );
   const dispatch = useAppDispatch();
   const [addProduct] = useAddProductMutation();
+  const [productFormData, setProductFormData] = useState<Partial<TProduct>>({});
+  const [form] = Form.useForm();
 
-  const handleProductSubmit = async (data: FieldValues) => {
+  const handleProductSubmit = async () => {
+    form.resetFields();
+
     try {
-      const res = await addProduct(data);
+      const res = await addProduct(productFormData);
 
       if (res) {
         toast.success("Product added successfully");
@@ -35,7 +37,11 @@ const AddProductModal = () => {
     <Modal
       centered
       open={open}
-      onCancel={() => dispatch(openModal(false))}
+      onCancel={() => {
+        dispatch(openModal(false));
+        setProductFormData({});
+        form.resetFields();
+      }}
       width={1000}
       footer={null}
     >
@@ -47,12 +53,26 @@ const AddProductModal = () => {
         * All fields are mandatory.
       </span>
 
-      <BaseForm onSubmit={handleProductSubmit}>
+      <Form onFinish={handleProductSubmit} form={form}>
+        {/* Name */}
         <div>
           <label style={{ display: "inline-block", marginLeft: "10px" }}>
             Name <span style={{ color: "red" }}>*</span>
           </label>
-          <BaseInput label="Name" type="text" name="name" />
+          <Form.Item name="name">
+            <Input
+              type="text"
+              onChange={(e) => {
+                setProductFormData({
+                  ...productFormData,
+                  name: e.target.value,
+                });
+              }}
+              placeholder="Name"
+              id="name"
+              size="large"
+            />
+          </Form.Item>
         </div>
 
         {/* Category and Brand */}
@@ -66,22 +86,44 @@ const AddProductModal = () => {
             >
               Category <span style={{ color: "red" }}>*</span>
             </label>
-            <BaseSelect
-              name="category"
-              label="Category"
-              options={[
-                { value: "laptop", label: "Laptop" },
-                { value: "monitor", label: "Monitor" },
-                { value: "Computer Parts", label: "Computer Parts" },
-              ]}
-            />
+            <Form.Item name="category">
+              <Select
+                style={{ width: "100%" }}
+                onChange={(value) => {
+                  setProductFormData({
+                    ...productFormData,
+                    category: value,
+                  });
+                }}
+                options={[
+                  { value: "laptop", label: "Laptop" },
+                  { value: "monitor", label: "Monitor" },
+                  { value: "Computer Parts", label: "Computer Parts" },
+                ]}
+                placeholder="Category"
+                size="large"
+              />
+            </Form.Item>
           </div>
 
           <div style={{ width: "49%" }}>
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Brand <span style={{ color: "red" }}>*</span>
             </label>
-            <BaseInput label="Brand" type="text" name="brand" />
+            <Form.Item name="brand">
+              <Input
+                type="text"
+                onChange={(e) => {
+                  setProductFormData({
+                    ...productFormData,
+                    brand: e.target.value,
+                  });
+                }}
+                placeholder="Brand"
+                id="brand"
+                size="large"
+              />
+            </Form.Item>
           </div>
         </div>
 
@@ -91,13 +133,40 @@ const AddProductModal = () => {
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Price <span style={{ color: "red" }}>*</span>
             </label>
-            <BaseInput label="Price" type="number" name="price" />
+            <Form.Item name="price">
+              <Input
+                type="number"
+                placeholder="Price"
+                id="price"
+                size="large"
+                onChange={(e) => {
+                  setProductFormData({
+                    ...productFormData,
+                    price: Number(e.target.value),
+                  });
+                }}
+              />
+            </Form.Item>
           </div>
+
           <div style={{ width: "49%" }}>
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Quantity <span style={{ color: "red" }}>*</span>
             </label>
-            <BaseInput label="Quantity" type="number" name="quantity" />
+            <Form.Item name="quantity">
+              <Input
+                type="number"
+                placeholder="Quantity"
+                id="quantity"
+                size="large"
+                onChange={(e) => {
+                  setProductFormData({
+                    ...productFormData,
+                    quantity: Number(e.target.value),
+                  });
+                }}
+              />
+            </Form.Item>
           </div>
         </div>
 
@@ -107,23 +176,43 @@ const AddProductModal = () => {
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Availability <span style={{ color: "red" }}>*</span>
             </label>
-            <BaseSelect
-              name="availability"
-              options={[
-                { value: "in stock", label: "In Stock" },
-                { value: "out of stock", label: "Out Of Stock" },
-              ]}
-            />
+            <Form.Item name="availability">
+              <Select
+                style={{ width: "100%" }}
+                onChange={(value) => {
+                  setProductFormData({
+                    ...productFormData,
+                    availability: value as "In stock" | "Out of stock",
+                  });
+                }}
+                options={[
+                  { value: "In stock", label: "In Stock" },
+                  { value: "Out of stock", label: "Out Of Stock" },
+                ]}
+                placeholder="Availability"
+                size="large"
+              />
+            </Form.Item>
           </div>
+
           <div style={{ width: "49%" }}>
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Warranty Period
             </label>
-            <BaseInput
-              label="Warranty Period"
-              type="number"
-              name="warrantyPeriod"
-            />
+            <Form.Item name="warrantyPeriod">
+              <Input
+                type="number"
+                placeholder="Warranty Period"
+                id="warrantyPeriod"
+                size="large"
+                onChange={(e) => {
+                  setProductFormData({
+                    ...productFormData,
+                    warrantyPeriod: Number(e.target.value),
+                  });
+                }}
+              />
+            </Form.Item>
           </div>
         </div>
 
@@ -133,22 +222,44 @@ const AddProductModal = () => {
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Compatibility
             </label>
-            <BaseSelect
-              name="compatibility"
-              label="Compatibility"
-              options={[
-                { value: "windows", label: "Windows" },
-                { value: "mac", label: "Mac" },
-                { value: "linux", label: "Linux" },
-              ]}
-            />
+            <Form.Item name="compatibility">
+              <Select
+                style={{ width: "100%" }}
+                onChange={(value) => {
+                  setProductFormData({
+                    ...productFormData,
+                    compatibility: value,
+                  });
+                }}
+                options={[
+                  { value: "windows", label: "Windows" },
+                  { value: "mac", label: "Mac" },
+                  { value: "linux", label: "Linux" },
+                ]}
+                placeholder="Compatibility"
+                size="large"
+              />
+            </Form.Item>
           </div>
 
           <div style={{ width: "49%" }}>
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Interface
             </label>
-            <BaseInput label="Interface" type="text" name="interface" />
+            <Form.Item name="interface">
+              <Input
+                type="text"
+                placeholder="Interface"
+                id="interface"
+                size="large"
+                onChange={(e) => {
+                  setProductFormData({
+                    ...productFormData,
+                    interface: e.target.value,
+                  });
+                }}
+              />
+            </Form.Item>
           </div>
         </div>
 
@@ -158,13 +269,40 @@ const AddProductModal = () => {
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Color
             </label>
-            <BaseInput label="Color" type="text" name="color" />
+            <Form.Item name="color">
+              <Input
+                type="text"
+                onChange={(e) => {
+                  setProductFormData({
+                    ...productFormData,
+                    color: e.target.value,
+                  });
+                }}
+                placeholder="Color"
+                id="color"
+                size="large"
+              />
+            </Form.Item>
           </div>
+
           <div style={{ width: "49%" }}>
             <label style={{ display: "inline-block", marginLeft: "10px" }}>
               Capacity
             </label>
-            <BaseInput label="Capacity" type="text" name="capacity" />
+            <Form.Item name="capacity">
+              <Input
+                type="text"
+                placeholder="Capacity"
+                id="capacity"
+                size="large"
+                onChange={(e) => {
+                  setProductFormData({
+                    ...productFormData,
+                    capacity: e.target.value,
+                  });
+                }}
+              />
+            </Form.Item>
           </div>
         </div>
 
@@ -173,14 +311,23 @@ const AddProductModal = () => {
           <label style={{ display: "inline-block", marginLeft: "10px" }}>
             Condition
           </label>
-          <BaseSelect
-            name="condition"
-            label="Condition"
-            options={[
-              { value: "brand new", label: "Brand New" },
-              { value: "second hand", label: "Second Hand" },
-            ]}
-          />
+          <Form.Item name="condition">
+            <Select
+              style={{ width: "100%" }}
+              onChange={(value) => {
+                setProductFormData({
+                  ...productFormData,
+                  condition: value,
+                });
+              }}
+              options={[
+                { value: "brand new", label: "Brand New" },
+                { value: "second hand", label: "Second Hand" },
+              ]}
+              placeholder="Condition"
+              size="large"
+            />
+          </Form.Item>
         </div>
 
         {/* Description */}
@@ -188,8 +335,19 @@ const AddProductModal = () => {
           <label style={{ display: "inline-block", marginLeft: "10px" }}>
             Description
           </label>
-
-          <BaseTextArea label="Description" name="description" />
+          <Form.Item name="description">
+            <TextArea
+              onChange={(e) => {
+                setProductFormData({
+                  ...productFormData,
+                  description: e.target.value,
+                });
+              }}
+              placeholder="Description"
+              id="description"
+              rows={4}
+            />
+          </Form.Item>
         </div>
 
         <Form.Item
@@ -201,16 +359,26 @@ const AddProductModal = () => {
           }}
         >
           <Button
-            // disabled
+            disabled={
+              !productFormData?.name ||
+              !productFormData?.category ||
+              !productFormData?.brand ||
+              !productFormData?.price ||
+              !productFormData?.quantity ||
+              !productFormData?.availability
+            }
+            htmlType="submit"
             style={{ margin: "10px" }}
             type="primary"
-            htmlType="submit"
-            onClick={() => dispatch(openModal(false))}
+            onClick={() => {
+              dispatch(openModal(false));
+              setProductFormData({});
+            }}
           >
             Submit
           </Button>
         </Form.Item>
-      </BaseForm>
+      </Form>
     </Modal>
   );
 };
