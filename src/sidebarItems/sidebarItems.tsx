@@ -1,15 +1,24 @@
 import { MenuProps } from "antd";
 import { NavLink } from "react-router-dom";
 
-const sidebarItems: MenuProps["items"] = [
+export const sellerSidebarItems: MenuProps["items"] = [
   {
     key: "/",
     label: <NavLink to="/">Products</NavLink>,
   },
   {
     key: "/sales",
-    label: <NavLink to="/sales">Sales</NavLink>,
+    label: <NavLink to="/sales-history">Sales History</NavLink>,
   },
 ];
 
-export default sidebarItems;
+export const buyerSidebarItems: MenuProps["items"] = [
+  {
+    key: "/",
+    label: <NavLink to="/">Products</NavLink>,
+  },
+  {
+    key: "/sales",
+    label: <NavLink to="/purchase-history">Purchase History</NavLink>,
+  },
+];

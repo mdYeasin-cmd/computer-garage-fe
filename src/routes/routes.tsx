@@ -4,6 +4,7 @@ import Sale from "../pages/Sale";
 import Product from "../pages/Product";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import Purchase from "../components/purchase/Purchase";
 
 const router = createBrowserRouter([
   {
@@ -15,8 +16,12 @@ const router = createBrowserRouter([
         element: <Product />,
       },
       {
-        path: "sales",
+        path: "sales-history",
         element: <Sale />,
+      },
+      {
+        path: "purchase-history",
+        element: <Purchase />,
       },
     ],
   },
