@@ -24,26 +24,10 @@ import { RootState } from "../redux/store";
 
 const { Search } = Input;
 
-// const defaultProduct: TProduct = {
-//   _id: "",
-//   name: "",
-//   category: "",
-//   brand: "",
-//   compatibility: "",
-//   quantity: 0,
-//   interface: "",
-//   condition: "",
-//   capacity: "",
-//   price: 0,
-//   warrantyPeriod: 0,
-//   color: "",
-//   availability: "Out of stock",
-//   description: "",
-// };
-
 const Product = () => {
   // local state
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [openMoreOptions, setOpenMoreOptions] = useState<boolean>(false);
 
   // redux state
   const dispatch = useAppDispatch();
@@ -143,12 +127,29 @@ const Product = () => {
     onChange: onSelectChange,
   };
 
+  const hide = () => {
+    setOpenMoreOptions(false);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpenMoreOptions(newOpen);
+  };
+
   const content = (
     <div>
       <p
         onClick={async () => {
+          const numberOfProduct = selectedRowKeys?.length;
+          hide();
           await bulkProductDelete(selectedRowKeys);
-          toast.success("bulk product deleted");
+          setSelectedRowKeys([]);
+          toast.success(
+            `${
+              numberOfProduct > 1
+                ? numberOfProduct + " products are"
+                : "1 product is"
+            } deleted successfully.`
+          );
         }}
         style={{
           cursor: "pointer",
@@ -202,6 +203,8 @@ const Product = () => {
                 placement="bottomRight"
                 content={content}
                 trigger="click"
+                open={openMoreOptions}
+                onOpenChange={handleOpenChange}
               >
                 <Button style={{ marginLeft: "10px" }}>More Options</Button>
               </Popover>

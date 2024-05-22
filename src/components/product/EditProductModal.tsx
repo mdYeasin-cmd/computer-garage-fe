@@ -107,8 +107,8 @@ const EditProductModal = ({ product }: TEditProductModalProps) => {
                   });
                 }}
                 options={[
-                  { value: "laptop", label: "Laptop" },
-                  { value: "monitor", label: "Monitor" },
+                  { value: "Laptop", label: "Laptop" },
+                  { value: "Monitor", label: "Monitor" },
                   { value: "Computer Parts", label: "Computer Parts" },
                 ]}
                 placeholder="Category"
