@@ -1,6 +1,7 @@
 import { Table, Typography } from "antd";
 import { useGetAllSalesHistoryQuery } from "../redux/features/sale/saleApi";
 import dayjs from "dayjs";
+import { TSale } from "../types";
 
 const { Title } = Typography;
 
@@ -25,13 +26,13 @@ const Sale = () => {
     {
       title: "Date of Sale",
       dataIndex: "dateOfSale",
-      render: (_: any, record: any) => {
+      render: (_: string, record: TSale) => {
         return <span>{dayjs(record?.dateOfSale).format("YYYY-MM-DD")}</span>;
       },
     },
   ];
 
-  const rows = data?.data?.map((item: any) => {
+  const rows = data?.data?.map((item: TSale) => {
     return {
       key: item?._id,
       ...item,

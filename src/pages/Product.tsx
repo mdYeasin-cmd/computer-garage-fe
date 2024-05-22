@@ -72,7 +72,7 @@ const Product = () => {
     {
       title: "Action",
       dataIndex: "action",
-      render: (_: any, record: any) => {
+      render: (_: string, record: TProduct) => {
         return (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Button
