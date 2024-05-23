@@ -74,10 +74,12 @@ const Product = () => {
       dataIndex: "quantity",
       responsive: ["md"],
     },
-    {
-      title: "Availability",
-      dataIndex: "availability",
-    },
+    user?.role === "seller"
+      ? {
+          title: "Availability",
+          dataIndex: "availability",
+        }
+      : {},
     {
       title: "Action",
       dataIndex: "action",
