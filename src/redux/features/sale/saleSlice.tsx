@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   openCreateSaleModal: false,
+  openPhurchaseModal: false,
   sales: [],
 };
 
@@ -12,9 +13,12 @@ const saleSlice = createSlice({
     openCreateSaleModal: (state, action) => {
       state.openCreateSaleModal = action.payload;
     },
+    openPhurchaseModal: (state, action) => {
+      state.openPhurchaseModal = action.payload;
+    },
   },
 });
 
-export const { openCreateSaleModal } = saleSlice.actions;
+export const { openCreateSaleModal, openPhurchaseModal } = saleSlice.actions;
 
 export default saleSlice.reducer;

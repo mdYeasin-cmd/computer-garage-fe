@@ -4,7 +4,7 @@ import Sale from "../pages/Sale";
 import Product from "../pages/Product";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import Purchase from "../components/purchase/Purchase";
+import Purchase from "../pages/Purchase";
 
 const router = createBrowserRouter([
   {

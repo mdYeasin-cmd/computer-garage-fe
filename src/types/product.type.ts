@@ -13,4 +13,5 @@ export type TProduct = {
   color?: string;
   availability: "In stock" | "Out of stock";
   description: string;
+  userId: string;
 };

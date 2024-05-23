@@ -16,11 +16,16 @@ import DeleteProductConfirmationModal from "../components/product/DeleteProductC
 import { useState } from "react";
 import { toast } from "sonner";
 import CreateSaleModal from "../components/sale/CreateSaleModal";
-import { openCreateSaleModal } from "../redux/features/sale/saleSlice";
+import {
+  openCreateSaleModal,
+  openPhurchaseModal,
+} from "../redux/features/sale/saleSlice";
 import EditIcon from "../assets/icons/EditIcon";
 import { TProduct } from "../types";
 import EditProductModal from "../components/product/EditProductModal";
 import { RootState } from "../redux/store";
+import { selectCurrentUser } from "../redux/features/auth/authSlice";
+import CreatePurchaseModal from "../components/sale/CreatePurchaseModal";
 
 const { Search } = Input;
 
@@ -30,6 +35,7 @@ const Product = () => {
   const [openMoreOptions, setOpenMoreOptions] = useState<boolean>(false);
 
   // redux state
+  const user = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
   const { data, isLoading: isProductsFetching } =
     useGetAllProductsQuery(undefined);
@@ -37,6 +43,9 @@ const Product = () => {
   const [editProduct, setEditProduct] = useState<Partial<TProduct>>({});
   const { openModal: open, openEditModal: editOpen } = useAppSelector(
     (state: RootState) => state.product
+  );
+  const { openPhurchaseModal: purchaseOpen } = useAppSelector(
+    (state: RootState) => state.sale
   );
 
   // console.log(editProduct, "edited product");
@@ -75,35 +84,53 @@ const Product = () => {
       render: (_: string, record: TProduct) => {
         return (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                dispatch(openCreateSaleModal(true));
-                dispatch(selectedProduct(record));
-              }}
-            >
-              Sell
-            </Button>
+            {user?.role === "seller" && (
+              <>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(openCreateSaleModal(true));
+                    dispatch(selectedProduct(record));
+                  }}
+                >
+                  Sell
+                </Button>
 
-            <span
-              onClick={(e) => {
-                e.stopPropagation();
-                setEditProduct(record);
-                dispatch(openEditModal(true));
-              }}
-            >
-              <EditIcon />
-            </span>
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditProduct(record);
+                    dispatch(openEditModal(true));
+                  }}
+                >
+                  <EditIcon />
+                </span>
 
-            <span
-              onClick={(e) => {
-                e.stopPropagation();
-                dispatch(openDeleteConfirmationModal(true));
-                dispatch(selectedProduct(record));
-              }}
-            >
-              <DeleteIcon />
-            </span>
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(openDeleteConfirmationModal(true));
+                    dispatch(selectedProduct(record));
+                  }}
+                >
+                  <DeleteIcon />
+                </span>
+              </>
+            )}
+
+            {user?.role === "buyer" && (
+              <>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(openPhurchaseModal(true));
+                    dispatch(selectedProduct(record));
+                  }}
+                >
+                  Purchase
+                </Button>
+              </>
+            )}
           </div>
         );
       },
@@ -183,39 +210,41 @@ const Product = () => {
               style={{ width: "100%" }}
             />
           </div>
-          <div
-            style={{
-              width: "20%",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Button
-              onClick={() => {
-                dispatch(openModal(true));
+          {user?.role === "seller" && (
+            <div
+              style={{
+                width: "20%",
+                display: "flex",
+                justifyContent: "flex-end",
               }}
             >
-              Add Product
-            </Button>
-
-            {selectedRowKeys.length > 0 && (
-              <Popover
-                placement="bottomRight"
-                content={content}
-                trigger="click"
-                open={openMoreOptions}
-                onOpenChange={handleOpenChange}
+              <Button
+                onClick={() => {
+                  dispatch(openModal(true));
+                }}
               >
-                <Button style={{ marginLeft: "10px" }}>More Options</Button>
-              </Popover>
-            )}
-          </div>
+                Add Product
+              </Button>
+
+              {selectedRowKeys.length > 0 && (
+                <Popover
+                  placement="bottomRight"
+                  content={content}
+                  trigger="click"
+                  open={openMoreOptions}
+                  onOpenChange={handleOpenChange}
+                >
+                  <Button style={{ marginLeft: "10px" }}>More Options</Button>
+                </Popover>
+              )}
+            </div>
+          )}
         </div>
         <Table
           loading={isProductsFetching}
           columns={columns}
           dataSource={rows}
-          rowSelection={rowSelection}
+          rowSelection={user?.role === "seller" ? rowSelection : undefined}
         />
       </div>
 
@@ -223,6 +252,7 @@ const Product = () => {
       {editOpen && <EditProductModal product={editProduct} />}
       <DeleteProductConfirmationModal />
       <CreateSaleModal />
+      {purchaseOpen && <CreatePurchaseModal />}
     </>
   );
 };
