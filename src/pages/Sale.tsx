@@ -6,7 +6,7 @@ import { TSale } from "../types";
 const { Title } = Typography;
 
 const Sale = () => {
-  const { data } = useGetAllSalesHistoryQuery(undefined);
+  const { data, isLoading } = useGetAllSalesHistoryQuery(undefined);
 
   console.log(data, "sales data");
 
@@ -44,7 +44,7 @@ const Sale = () => {
       <Title style={{ textAlign: "center", marginBottom: "20px" }} level={3}>
         Sales History
       </Title>
-      <Table columns={columns} dataSource={rows} />
+      <Table loading={isLoading} columns={columns} dataSource={rows} />
     </div>
   );
 };
